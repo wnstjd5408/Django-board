@@ -1,0 +1,38 @@
+<nav class=" navbar navbar-expand-lg navbar-light border-bottom" style="background-color: #1876FB;">
+    <a class="text-light navbar-brand" href="{% url 'bo:index' %}" >나만의 게시판</a>
+    <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse flex-grow-0" id="navbarNav">
+      <ul class="navbar-nav">
+          {% if user.is_authenticated  %}
+          <li class="nav-item">
+            <a class="nav-link text-light" href="{% url 'common:logout' %}" onclick="confirmLogout()">{{user.name}}(로그아웃)</a>
+          </li>
+          {% else %}
+          <li class='nav-item'>
+            <a class="nav-link text-light" href="{% url 'common:login' %}">로그인</a>
+          </li>
+          <li class='nav-item'>
+            <a class="nav-link text-light" href="{% url 'common:join' %}">회원가입</a>
+          </li>
+          {% endif %}
+        </li>
+      </ul>
+    </div> 
+
+  </nav>
+
+
+
+  
+  <script type="text/javascript">
+    function confirmLogout(){
+      if(confirm("정말 로그아웃 하시겠습니까?")){
+        location.href="{% url 'common:logout' %}"
+      }
+    }
+  </script>
+
+ 
