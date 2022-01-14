@@ -26,3 +26,10 @@ class UserUpdateView(UpdateView):
 class UserDetailView(DetailView):
     model = User
     template_name = 'common/info.html'
+
+
+class UserDeleteView(DeleteView):
+    model = User
+    context_object_name = 'user'
+    template_name = 'common/delete.html'
+    success_url = '/'

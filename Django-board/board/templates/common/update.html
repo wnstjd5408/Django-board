@@ -27,5 +27,8 @@
         </div>
         <button type="submit" class="btn btn-primary form-control btn-lg">수정하기</button>
     </form>
+    <a href="{% url 'common:delete' user.id %}">
+        <button class="btn btn-danger form-control">글삭제</button>
+    </a>
 </div>
 {% endblock %}
