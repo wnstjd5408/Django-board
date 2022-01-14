@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bo.apps.BoConfig',
     'common.apps.CommonConfig',
+    'hitcount'
 ]
 
 MIDDLEWARE = [

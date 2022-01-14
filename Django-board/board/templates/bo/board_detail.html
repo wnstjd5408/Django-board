@@ -6,24 +6,28 @@
     <div class="container my-3">
         <div class="row">
             <div class="col-5">
-                <h3> {{board.title}}</h3>
+                <h3> {{my_board.title}}</h3>
             </div>
             <div class="col-7 text-right">
-                <h3>{{board.creation_date}}</h3>
+                <h3>{{my_board.creation_date}}</h3>
             </div>
         </div>
         <div class="row">
         <div class='col-5 my-1'>
-            <p>{{board.ip}}</p>
+            <p> IP :{{my_board.ip}}</p>
+        </div>
+        <div class="col-6 my-1 text-right">
+            {% load hitcount_tags %}`
+            조회수 : {% get_hit_count for my_board within "days=7" %}
         </div>
 
         </div>
         <h5>게시글</h5>
         <div class="m-2 h-100">
-            <p>{{board.comment}}</p>
+            <p>{{my_board.comment}}</p>
         </div>
-        {% if user == board.author %}
-            <a href="{% url 'bo:board_edit' board.id %}">
+        {% if user == my_board.author %}
+            <a href="{% url 'bo:board_edit' my_board.id %}">
 
                 <button class="btn text-white" style="background-color: #1876FB;">수정하기</button>
             </a>

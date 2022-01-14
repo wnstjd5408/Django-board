@@ -1,15 +1,15 @@
-import django
-from django.core import paginator
+
 from django.http import request
-from django.http.response import HttpResponse
-from django.shortcuts import redirect, render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from .models import Board
 # Create your views here.
 from django.views import generic
 from django.utils import timezone
 from .forms import BoardForm
 from django.urls import reverse_lazy
-
+from hitcount.views import HitCountDetailView
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 
 # def index(request):
 #     """
@@ -49,15 +49,23 @@ class IndexView(generic.ListView):
 
 
 # Detail view
-class DetailView(generic.DetailView):
+class DetailView(HitCountDetailView):
 
     model = Board
     template_name = 'bo/board_detail.html'
+    count_hit = True
+    context_object_name = 'my_board'
 
     def get_queryset(self):
         return Board.objects.filter(creation_date__lte=timezone.now())
 
+    def get_context_data(self, **kwargs):
 
+        context = super(DetailView, self).get_context_data(**kwargs)
+        return context
+
+
+@method_decorator(login_required, name="dispatch")
 class BoardCreateView(generic.CreateView):
 
     form_class = BoardForm
@@ -93,6 +101,8 @@ class BoardCreateView(generic.CreateView):
 #     return render(request, 'bo/board_create.html', context)
 
 # 글 수정
+
+@method_decorator(login_required, name="dispatch")
 class BoardUpdateView(generic.UpdateView):
     model = Board
     context_object_name = 'board'
@@ -119,6 +129,7 @@ class BoardUpdateView(generic.UpdateView):
 #     return render(request, 'bo/board_update.html', {'boardForm': boardForm})
 
 
+@method_decorator(login_required, name="dispatch")
 class BoardDeleteView(generic.DeleteView):
     model = Board
     context_object_name = 'board'
