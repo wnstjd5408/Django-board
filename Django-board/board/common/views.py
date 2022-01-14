@@ -3,6 +3,7 @@ from django.views.generic import *
 # Create your views here.
 from .forms import *
 from django.urls import reverse_lazy
+from django.shortcuts import get_object_or_404
 
 
 class UserCreateView(CreateView):
@@ -12,9 +13,14 @@ class UserCreateView(CreateView):
 
 
 class UserUpdateView(UpdateView):
+    model = User
     form_class = CustomUserChangoForm
     template_name = 'common/update.html'
-    success_url = reverse_lazy('common:detail')
+    success_url = '/'
+
+    def get_object(self):
+        user = get_object_or_404(User, pk=self.kwargs['pk'])
+        return user
 
 
 class UserDetailView(DetailView):
