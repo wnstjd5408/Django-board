@@ -12,5 +12,11 @@ class UserCreateView(CreateView):
 
 
 class UserUpdateView(UpdateView):
-    form_class = UserChangeForm
+    form_class = CustomUserChangoForm
     template_name = 'common/update.html'
+    success_url = reverse_lazy('common:detail')
+
+
+class UserDetailView(DetailView):
+    model = User
+    template_name = 'common/info.html'

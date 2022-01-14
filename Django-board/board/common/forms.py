@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 from .models import User
+from django.contrib.auth.forms import UserChangeForm
+from django.contrib.auth import get_user_model
 
 
 class UserCreationForm(forms.ModelForm):
@@ -55,6 +57,12 @@ class UserCreationForm(forms.ModelForm):
             self.name = name
             self.date_of_birth = date_of_birth
             self.gender = gender
+
+
+class CustomUserChangoForm(UserChangeForm):
+    class Meta:
+        model = User
+        fields = ('name', 'date_of_birth', 'gender')
 
 
 class UserChangeForm(forms.ModelForm):
