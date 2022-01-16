@@ -29,6 +29,7 @@ class UserDetailView(DetailView):
 
 
 class UserDeleteView(DeleteView):
+    form_class = CheckPasswordForm
     model = User
     context_object_name = 'user'
     template_name = 'common/delete.html'
