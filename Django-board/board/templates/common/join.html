@@ -10,7 +10,7 @@
         </div>
         
     </div>
-    <form method="post" class="post-form" action="{% url 'common:join' %}">
+    <form method="post" class="post-form" action="{% url 'common:join' %}" onsubmit="joincomplete()">
         {% csrf_token %}
         {% include "form_errors.html" %}
         <div class="form-group">
@@ -50,7 +50,11 @@
         <button type="submit" class="btn btn-primary form-control">회원가입</button>
     </form>
 </div>
-
+<script type="text/javascript">
+    function joincomplete(){
+        alert("회원가입이 완료되었습니다!!!")
+      }
+  </script>
 {% endblock content %}
 
 

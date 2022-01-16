@@ -6,10 +6,10 @@
       <thead>
         <tr>
           <th>#</th>
-          <th>작성자</th>
           <th>제목</th>
           <th>작성날짜</th>
           <th>수정날짜</th>
+          <th>작성자</th>
           <th>조회수</th>
         </tr>
       </thead>
@@ -18,10 +18,10 @@
           {% for board in board_list %}
           <tr>
             <td>{{board.id}}</td>
-            <td>{{board.author}}</td>
             <td><a href="{% url 'bo:detail' board.id %}">{{board.title}}</a></td>
             <td>{{board.creation_date}}</td>
             <td>{{board.modified_date}}</td>
+            <td>{{board.author}}</td>
             <td>{% get_hit_count for board %}</td>
           </tr>
           {% endfor %} 
