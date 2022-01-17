@@ -5,6 +5,8 @@ from .forms import *
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.views import PasswordChangeView
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 
 
 class UserCreateView(CreateView):
@@ -13,6 +15,7 @@ class UserCreateView(CreateView):
     success_url = reverse_lazy('common:login')
 
 
+@method_decorator(login_required, name="dispatch")
 class UserUpdateView(UpdateView):
     model = User
     form_class = CustomUserChangeForm
@@ -29,6 +32,7 @@ class UserDetailView(DetailView):
     template_name = 'common/info.html'
 
 
+@method_decorator(login_required, name="dispatch")
 class UserDeleteView(DeleteView):
     form_class = CheckPasswordForm
     model = User
@@ -37,6 +41,7 @@ class UserDeleteView(DeleteView):
     success_url = '/'
 
 
+@method_decorator(login_required, name="dispatch")
 class UserPasswordChangeview(PasswordChangeView):
 
     template_name = 'common/password_change.html'
