@@ -14,7 +14,7 @@ class Board(models.Model, HitCountMixin):
     creation_date = models.DateField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
     comment = models.TextField()
-    hit_count_generifc = GenericRelation(
+    hit_count_generic = GenericRelation(
         HitCount, object_id_field='object_pk', related_query_name='hit_count_generic_relation')
 
     def __str__(self):

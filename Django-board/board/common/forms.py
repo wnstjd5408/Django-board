@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from .models import User
 from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth import get_user_model
+from django.contrib.auth.hashers import check_password
 
 
 class CheckPasswordForm(forms.Form):
@@ -77,7 +78,7 @@ class UserCreationForm(forms.ModelForm):
             self.gender = gender
 
 
-class CustomUserChangoForm(UserChangeForm):
+class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = User
         fields = ('name', 'date_of_birth', 'gender')

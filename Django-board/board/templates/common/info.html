@@ -23,4 +23,9 @@
         <button type="submit" class="btn btn-primary form-control btn-lg">수정하기</button>
     </form>
 </div>
+<div class="container my-3">
+
+<button class="btn btn-secondary btn-lg form-control  "><a href="{% url 'common:change-password' user.id %}" class="text-white">비밀번호 변경</a></button>
+</div>
+
 {% endblock %}

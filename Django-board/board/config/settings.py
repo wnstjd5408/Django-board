@@ -11,7 +11,10 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
-
+import os
+import json
+import secrets
+from django.core.exceptions import ImproperlyConfigured
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,7 +23,25 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'iyf^ua!*0ek0pz!7u^s!0boq(4m(!bkukr78pn(w2$z6hxoc&b'
+
+
+secret_file = os.path.join(BASE_DIR, 'secrets.json')
+
+
+with open(secret_file) as f:
+    secrets = json.loads(f.read())
+
+
+def get_secret(setting, secrets=secrets):
+    try:
+        return secrets[setting]
+    except KeyError:
+        error_msg = "Set the {} environment variable".format(setting)
+        raise ImproperlyConfigured(error_msg)
+
+
+SECRET_KEY = get_secret("SECRET_KEY")
+# SECRET_KEY = 'iyf^ua!*0ek0pz!7u^s!0boq(4m(!bkukr78pn(w2$z6hxoc&b'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -128,3 +149,10 @@ STATICFILES_DIRS = [
     BASE_DIR/'static'
 
 ]
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_PORT = '587'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'js2002232@naver.com'
+EMAIL_HOST_PASSWORD = 'kjs970719'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
