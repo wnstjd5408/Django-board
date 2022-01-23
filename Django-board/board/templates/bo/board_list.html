@@ -1,7 +1,19 @@
 {% extends 'base.html' %} {% block content %}
 {% load hitcount_tags %}
+
 <main>
+  {% if messages %}
+  <div>
+    {% for message in messages %}
+      <div class='alert alert-{{ message.tags }}'>
+     
+      {{ message.message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+  </div>
   <div class="container">
+  
     <table class="table">
       <thead>
         <tr>
@@ -75,4 +87,8 @@
       </div>
     {% endif %}
 </main>
+
+<a href="{% url 'place:index' %}">
+  <button class="btn btn-primary form-control">가게리스트</button>
+</a>
 {% endblock %}

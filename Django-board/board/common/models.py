@@ -42,7 +42,7 @@ class User(AbstractBaseUser):
     )
     Gender_choices = {
         ('남', '남자'),
-        ('남', '여자')
+        ('여', '여자')
     }
     name = models.CharField(max_length=15)
     date_of_birth = models.DateField()

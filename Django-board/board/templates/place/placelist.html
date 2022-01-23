@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+    rel="stylesheet"
+    type="text/css"
+    href="{% static 'bootstrap.min.css' %}"
+    />
+    <title>가게리스트</title>
+</head>
+<body>
+    <div class ='container my-3'>
+        <div class="row">
+            {% if placelist %} 
+            {% for place in placelist %}
+            <div class="col-4 col-md-4 text-center">
+                <a href="#"><img src='{{ place.place_imageurl }}' alt='a' width="220" height="210"></a>
+                <p>{{place.place_name}} </p>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

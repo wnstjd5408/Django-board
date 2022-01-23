@@ -23,5 +23,5 @@ urlpatterns = [
     path('bo/', include('bo.urls')),
     path('common/', include('common.urls')),
     path('', views.IndexView.as_view(), name='index'),
-
+    path('place/', include('place.urls')),
 ]

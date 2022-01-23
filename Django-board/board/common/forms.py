@@ -5,22 +5,22 @@ from .models import User
 from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password
+from django.contrib.auth import views as auth_views
 
 
 class CheckPasswordForm(forms.Form):
 
     password = forms.CharField()
+    auth_views.LogoutView.as_view()
 
     def clean(self):
         cleaned_data = super().clean()
         password = cleaned_data.get('password', '')
-        confirm_password = self.user.password
+        confirm_password = self.User.password
 
         if password:
             if not check_password(password, confirm_password):
                 self.add_error('password', '비밀번호가 일치하지 않습니다')
-            # else:
-            #     self.user.password = password
         else:
             return self.add_error('password', '비밀번호를 입력해 주세요.!!')
 
@@ -52,6 +52,7 @@ class UserCreationForm(forms.ModelForm):
         # user.gender = self.cleaned_data.get("gender")
         if commit:
             user.save()
+            
         return user
 
     def clean(self):

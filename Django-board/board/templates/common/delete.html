@@ -10,7 +10,7 @@
   </div>
 </div>
 <div class="container my-3">
-    <form method="POST" class="form-horizontal" action ="{% url 'common:delete' user.id %}">
+    <form method="POST" class="form-horizontal" >
       {% csrf_token %}
       <div class="form-group">
           <label for="password">비밀번호</label>
@@ -20,17 +20,22 @@
         <input type="checkbox" name="ck" onClick="checkDisable(this.form)">
         <span style="color:#d14040f2; font-weight: bold;">유의사항 동의 &nbsp;</span>
       </label>
-      <button type="submit" class="btn btn-danger" name=bt disabled=True>삭제하기</button>
+      <button type="submit" class="btn btn-danger" name=bt disabled=True onclick="check()">삭제하기</button>
     
     </form>
     </div>
     <script type="text/javascript">
       function checkDisable(form) {
-          if (form.ck.checked == true ){
+          if (form.ck.checked == true){
               form.bt.disabled = false;
           } else {
               form.bt.disabled = true;
           }
+      }
+      function check(){
+        if(confirm('당신의 아이디가 삭제 됩니다.')){
+           
+        }
       }
     </script>
 {% endblock %}

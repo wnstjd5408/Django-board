@@ -1,4 +1,5 @@
 
+from pyexpat.errors import messages
 from django.http import request
 from django.shortcuts import get_object_or_404
 from .models import Board
@@ -10,7 +11,7 @@ from django.urls import reverse_lazy
 from hitcount.views import HitCountDetailView
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-
+from django.contrib import messages
 # def index(request):
 #     """
 #     게시판 목록 출력
@@ -78,6 +79,7 @@ class BoardCreateView(generic.CreateView):
         board.creation_date = timezone.now()
         board.ip = self.request.META['REMOTE_ADDR']
         board.save()
+        messages.success(self.request, "포스팅을 완료했습니다.")
         return super(BoardCreateView, self).form_valid(form)
 
 
@@ -109,6 +111,10 @@ class BoardUpdateView(generic.UpdateView):
     form_class = BoardForm
     template_name = 'bo/board_update.html'
     success_url = '/'
+
+    def form_valid(self, form):
+        messages.success(self.request, "포스팅을 수정했습니다")
+        return super().form_valid(form)
 
     def get_object(self):
         board = get_object_or_404(Board, pk=self.kwargs['pk'])

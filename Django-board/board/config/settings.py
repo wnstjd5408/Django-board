@@ -60,18 +60,24 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bo.apps.BoConfig',
     'common.apps.CommonConfig',
+    'place.apps.PlaceConfig',
     'hitcount'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django_session_timeout.middleware.SessionTimeoutMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+SESSION_EXPIRE_SECONDS = 3600
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY_GRACE_PERIOD = 60  # group by minute
+SESSION_TIMEOUT_REDIRECT = '/'
 
 ROOT_URLCONF = 'config.urls'
 

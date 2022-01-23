@@ -38,7 +38,7 @@ class UserDeleteView(DeleteView):
     model = User
     context_object_name = 'user'
     template_name = 'common/delete.html'
-    success_url = '/'
+    success_url = reverse_lazy('common:login')
 
 
 @method_decorator(login_required, name="dispatch")
