@@ -3,11 +3,11 @@ from django.urls import path
 from .views import *
 
 
-app_name = 'place'
+app_name = 'location'
 
 urlpatterns = [
-    path('', PlaceListView.as_view(), name='index'),
-
-
+    path('location/<int:pk>', PlaceListView.as_view(), name='index'),
+    # path('', PlaceDetailView.as_view(), name='detail'),
+    path('location/', LocationListView.as_view(), name='idx')
 
 ]

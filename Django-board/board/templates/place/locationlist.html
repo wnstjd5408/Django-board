@@ -1,0 +1,27 @@
+{% extends 'base.html' %} 
+{% block content %}
+<div class="container">
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>위치</th>
+                <th>전체갯수</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if locationlist %}
+                {% for location in locationlist %}
+                <tr>
+                    <td>{{location.id}}</td>
+                    <td><a href="{% url 'location:index' location.id %}">{{location.location_name}}</a></td>
+                    <td>{{location.count}}</td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <p>게시판 게시글이 없습니다</p>
+            {% endif %}
+        </tbody>
+    </table>
+{% endblock %}
