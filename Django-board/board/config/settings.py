@@ -58,10 +58,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'bo.apps.BoConfig',
-    'common.apps.CommonConfig',
-    'place.apps.PlaceConfig',
-    'hitcount'
+    'rest_framework',
+    'bo',
+    'common',
+    'place',
+    'hitcount',
+
 ]
 
 MIDDLEWARE = [
