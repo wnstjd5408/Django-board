@@ -15,13 +15,25 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from bo import views
+from bo.views import *
+from rest_framework import renderers
+
+
+board_list = BoardViewSet.as_view({
+    'get': 'list',
+    'post': 'create'
+})
 
 
 urlpatterns = [
+    path('', board_list, name='index'),
     path('admin/', admin.site.urls),
     path('bo/', include('bo.urls')),
     path('common/', include('common.urls')),
-    path('', views.IndexView.as_view(), name='index'),
     path('place/', include('place.urls')),
+
+    path('rest-auth/', include('rest_auth.urls')),
+    path('rest-auth/registration/', include('rest_auth.registration.urls')),
+
+    # path('api_auth/', include('rest_framework.urls')),
 ]

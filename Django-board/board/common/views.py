@@ -1,64 +1,24 @@
-from django.shortcuts import render
 from django.views.generic import *
-# Create your views here.
 from .forms import *
-from django.urls import reverse_lazy
-from django.shortcuts import get_object_or_404
-from django.contrib.auth.views import PasswordChangeView
-from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
+from rest_framework import generics, viewsets
+from .serializers import *
 
 
-class UserCreateView(CreateView):
-    form_class = UserCreationForm
-    template_name = 'common/join.html'
-    success_url = reverse_lazy('common:login')
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
+
+    # ReadOnlyModelViewSet - >자동적으로 ReadOnly를 수행
+
+    # 해당 ViewSet은 자동적으로 list와 검색 기능을 수행
+
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 
-@method_decorator(login_required, name="dispatch")
-class UserUpdateView(UpdateView):
-    model = User
-    form_class = CustomUserChangeForm
-    template_name = 'common/update.html'
-    success_url = '/'
-
-    def get_object(self):
-        user = get_object_or_404(User, pk=self.kwargs['pk'])
-        return user
+# class UserList(generics.ListAPIView):
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
 
 
-class UserDetailView(DetailView):
-    model = User
-    template_name = 'common/info.html'
-
-
-@method_decorator(login_required, name="dispatch")
-class UserDeleteView(DeleteView):
-    form_class = CheckPasswordForm
-    model = User
-    context_object_name = 'user'
-    template_name = 'common/delete.html'
-    success_url = reverse_lazy('common:login')
-
-
-@method_decorator(login_required, name="dispatch")
-class UserPasswordChangeview(PasswordChangeView):
-
-    template_name = 'common/password_change.html'
-    success_message = 'Password changed'
-    success_url = reverse_lazy('bo:index')
-
-    # def get_form(self, form_class=None):
-    #     form = super().get_form(form_class=form_class)
-    #     form.fields["old_password"].widget.attrs = {
-    #         "placeholder": "현재 비밀번호"}
-    #     form.error_messages["password_mismatch"] = "비밀번호가 일치하지 않습니다."
-    #     form.fields["new_password1"].widget.attrs = {
-    #         "placeholder": "새로운 비밀번호"}
-    #     form.fields["new_password2"].widget.attrs = {
-    #         "placeholder": "비밀번호 확인"
-    #     }
-    #     return form
-
-    # def get_success_url(self):
-    #     return self.request.user.get_absolute_url()
+# class UserDetail(generics.RetrieveAPIView):
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer

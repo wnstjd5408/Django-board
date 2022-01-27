@@ -1,6 +1,6 @@
 
 from pyexpat.errors import messages
-from django.http import request
+from django.http import Http404, request
 from django.shortcuts import get_object_or_404
 from .models import Board
 # Create your views here.
@@ -12,133 +12,179 @@ from hitcount.views import HitCountDetailView
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-# def index(request):
-#     """
-#     게시판 목록 출력
-#     """
-#     page = request.GET.get('page', '1') #페이지
 
-#     #조회
-#     board_list = Board.objects.order_by('-id')
-
-#     #페이징처리
-#     paginator = Paginator(board_list, 10) #페이지당 10개씩 보여주기
-
-#     page_obj = Paginator.get_page(page)
-
-
-#     context = {'page_obj': page_obj}
-#     return render(request, 'bo/board_list.html', context)
-
-# 메인 화면 리스트
+from .serializers import BoardSerializer
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from rest_framework.views import APIView
+from django.http import Http404
+from rest_framework import generics, permissions, viewsets
+from rest_framework.pagination import PageNumberPagination
+from common.permissions import IsUserOrReadOnly
+# DRF mixins!
+# APIView에서는 각 요청 method 맞게 serializer에서 직접 처리
+# 그러나 자주 사용되는 기능이라 DRF에서 미리 구현 - >mixins!
+# queryset과 serializer_class를 지정해주기만하면 나머지는 상속받은 Mixin과 연결해주기만 하면 됨
 
 
-class IndexView(generic.ListView):
-    template_name = 'bo/board_list.html'
-    context_object_name = 'board_list'
-    model = Board
-    paginate_by = 10  # 10개씩 리스트에 표시
-
-    def get_queryset(self):
-        return Board.objects.order_by('-id')
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 4
+    page_size_query_param = 'page_size'
+    max_page_size = 10
 
 
-# def detail(request, board_id):
-#     board = get_object_or_404(Board, pk=board_id)
-#     context = {'board': board}
-#     return render(request, 'bo/board_detail.html', context)
+class BoardViewSet(viewsets.ModelViewSet):
+    # ModelViewSet ? -> 자동적으로 list, create, 검색, update, destory를 수행
+
+    # 다른 기능 추가 원할 시 -> @action 데코레이터 사용
+
+    queryset = Board.objects.all()
+    serializer_class = BoardSerializer
+    permission_classes = [
+        permissions.IsAuthenticatedOrReadOnly, IsUserOrReadOnly]
+    pagination_class = StandardResultsSetPagination
+
+    def perform_create(self, serializer):
+        # Post 요청 - >perform_create() 오버라이딩
+        # instance save를 수정
+        serializer.save(author=self.request.user)
+
+# class BoardList(generics.ListCreateAPIView):
+#     queryset = Board.objects.all()
+#     serializer_class = BoardSerializer
+#     permission_classes = [
+#         permissions.IsAuthenticatedOrReadOnly, ]
+#     # 기존 permissions에 우리가 생성한 IsUserOrReadOnly도 추가
+
+#     # DRF -> 이용자 권한 설정 클래스 제공
+#     # 여기서는 IsAuthenticatedOrReadOnly -> authenticated는 R C 가능/ 아니면 R only
+#     def perform_create(self, serializer):
+#         # Post 요청 - >perform_create() 오버라이딩
+#         # instance save를 수정
+#         serializer.save(author=self.request.user)
+# class BoardList(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+#     queryset = Board.objects.all()
+#     serializer_class = BoardSerializer
+
+#     # 요청 method 맞게 함수를 정의
+#     def get(self, request, *args, **kwargs):
+#         return self.list(request, *args, **kwargs)
+
+#     def post(self, request, *args, **kwargs):
+#         return self.create(request, *args, **kwargs)
+
+# class BoardList(APIView):
+#     def get(self, request, format=None):
+#         board = Board.objects.all()
+#         serializer = BoardSerializer(board, many=True)
+#         return Response(serializer.data)
+
+#     def post(self, request, format=None):
+#         serializer = BoardSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+# @api_view(['GET', 'POST'])
+# def BoardList(request):
+#     # Read
+#     if request.method == 'GET':
+#         board = Board.objects.all()
+#         serializer = BoardSerializer(board.values(), many=True)
+#         # many=True? Board.objects.all()로 검색한 객체는 list 형태!
+#         # serializer는 한개의 객체만 이해할 수 있고, 리스트는 이해할 수 없다!
+#         # 따라서 many=True를 추가해 중복 표현 값에 대한 list를 받게끔
+
+#         return Response(serializer.data)
+#         # Response의 정체는?
+#         # -> TemplateResponse 객체의 일종으로 렌더링되지 않은 컨텐츠를 가져오고
+#         # 클라이언트에게 반환할 올바른 컨텐츠 유형을 결정!
+#     # create
+#     elif request.method == 'POST':
+#         serializer = BoardSerializer(data=request.data)
+#         # request data의 정체는
+#         # ->DRF가 제공! 기존의 HttpRequest를 request 객체로 확장하여, 더 유연한 요청 파싱을 제공한다고 함
+#         # 즉, 핵심적인 기능을 form에서 섯던 request.POST와 유사하지만 웹 API에 더 유용한 속성입니다.
+
+#         if serializer.is_valid():
+#             # POST 요청 -> 유효성 검사는 필수다
+#             serializer.save()
+#             return Response(serializer.data, status=201)
+#         return Response(serializer.errors, status=404)
+#         # status= 의 정체는 -> DRF가 제공하는 HTTP의 상태코드! 에러 종류에 따라 더욱 명식적인 식별자를 제공
 
 
-# Detail view
-class DetailView(HitCountDetailView):
-
-    model = Board
-    template_name = 'bo/board_detail.html'
-    count_hit = True
-    context_object_name = 'my_board'
-
-    def get_queryset(self):
-        return Board.objects.filter(creation_date__lte=timezone.now())
-
-    def get_context_data(self, **kwargs):
-        context = super(DetailView, self).get_context_data(**kwargs)
-        return context
+# class BoardDetail(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = Board.objects.all()
+#     serializer_class = BoardSerializer
+#     permission_classes = [
+#         permissions.IsAuthenticatedOrReadOnly, IsUserOrReadOnly]
 
 
-@method_decorator(login_required, name="dispatch")
-class BoardCreateView(generic.CreateView):
+# class BoardDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
+#                   mixins.DestroyModelMixin, generics.GenericAPIView):
+#     queryset = Board.objects.all()
+#     serializer_class = BoardSerializer
 
-    form_class = BoardForm
-    template_name = 'bo/board_create.html'
-    success_url = '/'
+#     def get(self, request, *args, **kwargs):
+#         return self.retrieve(request, *args, **kwargs)
 
-    def form_valid(self, form):
-        board = form.save(commit=False)
-        board.author = self.request.user
-        board.creation_date = timezone.now()
-        board.ip = self.request.META['REMOTE_ADDR']
-        board.save()
-        messages.success(self.request, "포스팅을 완료했습니다.")
-        return super(BoardCreateView, self).form_valid(form)
+#     def put(self, request, *args, **kwargs):
+#         return self.update(request, *args, **kwargs)
 
+#     def get(self, request, *args, **kwargs):
+#         return self.destroy(request, *args, **kwargs)
+# class BoardDetail(APIView):
+#     def get_object(self, pk):
+#         try:
+#             return Board.objects.get(pk=pk)
+#         except Board.DoesNotExist:
+#             return Http404
 
-# def board_create(request):
-#     """
-#     게시글
-#     글등록
-#     """
-#     if request.method == 'POST':
-#         form = BoardForm(request.POST)
-#         if form.is_valid():
-#             board = form.save(commit=False)
-#             board.userid = request.user
-#             board.creation_date = timezone.now()
-#             board.ip = request.META['REMOTE_ADDR']
-#             board.save()
-#             return redirect('bo:index')
-#     else:
-#         form = BoardForm()
-#     context = {'form': form}
-#     return render(request, 'bo/board_create.html', context)
+#     def get(self, request, pk, format=None):
+#         board = self.get_object(pk)
+#         serializer = BoardSerializer(board)
+#         return Response(serializer.data)
 
-# 글 수정
+#     def put(self, request, pk, format=None):
+#         board = self.get_object(pk)
+#         serializer = BoardSerializer(board, data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@method_decorator(login_required, name="dispatch")
-class BoardUpdateView(generic.UpdateView):
-    model = Board
-    context_object_name = 'board'
-    form_class = BoardForm
-    template_name = 'bo/board_update.html'
-    success_url = '/'
-
-    def form_valid(self, form):
-        messages.success(self.request, "포스팅을 수정했습니다")
-        return super().form_valid(form)
-
-    def get_object(self):
-        board = get_object_or_404(Board, pk=self.kwargs['pk'])
-        return board
-
-# def board_edit(request, pk):
-#     board = Board.objects.get(id=pk)
-#     if request.method == "POST":
-#         form = BoardForm(request.POST)
-#         board = form.save(commit=False)
-#         board.modified_date = timezone.now()
-#         board.title = request.POST['title']
-#         board.comment = request.POST['comment']
-#         board.save()
-#         return redirect('bo:detail')
-#     else:
-#         boardForm = BoardForm
-#     return render(request, 'bo/board_update.html', {'boardForm': boardForm})
+#     def delete(self, request, pk, format=None):
+#         board = self.get_object(pk)
+#         board.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-@method_decorator(login_required, name="dispatch")
-class BoardDeleteView(generic.DeleteView):
-    model = Board
-    context_object_name = 'board'
-    success_url = reverse_lazy('bo:index')
+# @api_view(['GET', 'PUT', 'DELETE'])
+# def BoardDetail(request, pk):
+#     try:
+#         board = Board.objects.get(pk=pk)
+#     except Board.DoesNotExist:
+#         return Response(status=status.HTTP_404_NOT_FOUND)
+#     # 우선 pk에 해당하는 Board가 존재하는지! 없으면 404 에러를 띄워주도록
 
-    def get(self, request, *args, **kwargs):
-        return self.post(request, *args, **kwargs)
+#     # Detail
+#     if request.method == 'GET':
+#         serializer = BoardSerializer(board)
+#         return Response(serializer.data)
+
+#     # Update
+#     elif request.method == 'PUT':
+#         serializer = BoardSerializer(board, data=request.data)
+#         # request 요청이 들어온 그 board를 serializer 담아 가져옴
+
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#     # Delete
+#     elif request.method == 'DELETE':
+#         board.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
