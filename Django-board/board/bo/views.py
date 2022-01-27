@@ -62,6 +62,7 @@ class BoardList(generics.ListCreateAPIView):
         # Post 요청 - >perform_create() 오버라이딩
         # instance save를 수정
         serializer.save(author=self.request.user)
+
 # class BoardList(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
 #     queryset = Board.objects.all()
 #     serializer_class = BoardSerializer

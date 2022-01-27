@@ -10,7 +10,6 @@ class UserSerializer(serializers.ModelSerializer):
             name=validated_data['name'],
             date_of_birth=validated_data['date_of_birth'],
             gender=validated_data['gender'],
-
         )
         user.set_password(validated_data['password'])
         user.save()
