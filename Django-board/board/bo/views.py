@@ -33,35 +33,35 @@ class StandardResultsSetPagination(PageNumberPagination):
     max_page_size = 10
 
 
-class BoardViewSet(viewsets.ModelViewSet):
-    # ModelViewSet ? -> 자동적으로 list, create, 검색, update, destory를 수행
+# class BoardViewSet(viewsets.ModelViewSet):
+#     # ModelViewSet ? -> 자동적으로 list, create, 검색, update, destory를 수행
 
-    # 다른 기능 추가 원할 시 -> @action 데코레이터 사용
+#     # 다른 기능 추가 원할 시 -> @action 데코레이터 사용
 
-    queryset = Board.objects.all()
-    serializer_class = BoardSerializer
-    permission_classes = [
-        permissions.IsAuthenticatedOrReadOnly, IsUserOrReadOnly]
-    pagination_class = StandardResultsSetPagination
-
-    def perform_create(self, serializer):
-        # Post 요청 - >perform_create() 오버라이딩
-        # instance save를 수정
-        serializer.save(author=self.request.user)
-
-# class BoardList(generics.ListCreateAPIView):
 #     queryset = Board.objects.all()
 #     serializer_class = BoardSerializer
 #     permission_classes = [
-#         permissions.IsAuthenticatedOrReadOnly, ]
-#     # 기존 permissions에 우리가 생성한 IsUserOrReadOnly도 추가
+#         permissions.IsAuthenticatedOrReadOnly, IsUserOrReadOnly]
+#     pagination_class = StandardResultsSetPagination
 
-#     # DRF -> 이용자 권한 설정 클래스 제공
-#     # 여기서는 IsAuthenticatedOrReadOnly -> authenticated는 R C 가능/ 아니면 R only
 #     def perform_create(self, serializer):
 #         # Post 요청 - >perform_create() 오버라이딩
 #         # instance save를 수정
 #         serializer.save(author=self.request.user)
+
+class BoardList(generics.ListCreateAPIView):
+    queryset = Board.objects.all()
+    serializer_class = BoardSerializer
+    permission_classes = [
+        permissions.IsAuthenticatedOrReadOnly, ]
+    # 기존 permissions에 우리가 생성한 IsUserOrReadOnly도 추가
+
+    # DRF -> 이용자 권한 설정 클래스 제공
+    # 여기서는 IsAuthenticatedOrReadOnly -> authenticated는 R C 가능/ 아니면 R only
+    def perform_create(self, serializer):
+        # Post 요청 - >perform_create() 오버라이딩
+        # instance save를 수정
+        serializer.save(author=self.request.user)
 # class BoardList(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
 #     queryset = Board.objects.all()
 #     serializer_class = BoardSerializer
@@ -115,11 +115,11 @@ class BoardViewSet(viewsets.ModelViewSet):
 #         # status= 의 정체는 -> DRF가 제공하는 HTTP의 상태코드! 에러 종류에 따라 더욱 명식적인 식별자를 제공
 
 
-# class BoardDetail(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = Board.objects.all()
-#     serializer_class = BoardSerializer
-#     permission_classes = [
-#         permissions.IsAuthenticatedOrReadOnly, IsUserOrReadOnly]
+class BoardDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Board.objects.all()
+    serializer_class = BoardSerializer
+    permission_classes = [
+        permissions.IsAuthenticatedOrReadOnly, IsUserOrReadOnly]
 
 
 # class BoardDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin,

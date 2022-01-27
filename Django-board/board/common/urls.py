@@ -1,21 +1,22 @@
 
 
-from django.urls import path, reverse_lazy
+from django.urls import path, reverse_lazy, include
 from django.contrib.auth import views as auth_views
 from .views import *
 from rest_framework.urlpatterns import format_suffix_patterns
-
+from rest_auth.views import LoginView, LogoutView, PasswordChangeView, PasswordResetView, PasswordResetConfirmView
+from .views import *
 app_name = 'common'
 
 
-user_list = UserViewSet.as_view({
-    'get': 'list'
-})
+# user_list = UserViewSet.as_view({
+#     'get': 'list'
+# })
 
 
-user_detail = UserViewSet.as_view({
-    'get': 'retrieve'
-})
+# user_detail = UserViewSet.as_view({
+#     'get': 'retrieve'
+# })
 
 urlpatterns = [
     # path('join/', views.UserCreateView.as_view(), name='join'),
@@ -26,7 +27,9 @@ urlpatterns = [
     # path('<int:pk>/delete', views.UserDeleteView.as_view(), name='delete'),
     # path('<int:pk>/change-password/',
     #      views.UserPasswordChangeview.as_view(), name="change-password"),
-    path('users/', user_list, name='userlist'),
-    path('users/<int:pk>', user_detail, name="userdetail")
+    # path('rest-auth/login/', LoginView.as_view(), name="userlogin"),
+    path('signup/', UserCreate.as_view()),
+    path('users/', UserList.as_view(), name='userlist'),
+    path('users/<int:pk>', UserDetail.as_view(), name="userdetail")
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)
