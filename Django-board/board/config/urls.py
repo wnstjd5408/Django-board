@@ -20,8 +20,8 @@ from bo import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('bo/', include('bo.urls')),
-    path('common/', include('common.urls')),
+    path('bos/', include('bo.urls')),
+    path('commons/', include('common.urls')),
     path('', views.IndexView.as_view(), name='index'),
-    path('place/', include('place.urls')),
+    path('locations/', include('place.urls')),
 ]

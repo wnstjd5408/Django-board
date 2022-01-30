@@ -10,13 +10,13 @@
     type="text/css"
     href="{% static 'bootstrap.min.css' %}"
     />
-    <title>가게리스트</title>
+    <title>가게리스트{{placelist}}</title>
 </head>
 <body>
     <div class ='container my-3'>
         <div class="row">
             {% if placelist %} 
-            {% for place in list %}
+            {% for place in placelist %}
             <div class="col-4 col-md-4 text-center">
                 <a href="#"><img src='{{ place.place_imageurl }}' alt='a' width="220" height="210"></a>
                 <p>{{place.place_name}} </p>
@@ -25,5 +25,39 @@
             {% endif %}
         </div>
     </div>
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{page_obj.previous_page_number }}">이전</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" tabindex="-1" aria-disabled="true" href="#">이전</a>
+          </li>
+        {% endif %}
+        {% for page_number in   page_obj.paginator.page_range %}
+        {% if page_number >= page_obj.number|add:-5 and page_number <= page_obj.number|add:5 %}
+            {% if page_number == page_obj.number %}
+            
+            <li class="page-item active" aria-current="page">
+                <a class="page-link" href="?page={{page_number}}">{{page_number}}</a>
+              </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+            </li>
+            {% endif %}
+            {% endif %}
+        {% endfor %}
+        {% if  page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{page_obj.next_page_number}}">다음</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <a class="page-link" tabindex="-1" aria-disabled="true" href="#">다음</a>
+        </li>
+        {% endif %}
+    </ul>
 </body>
 </html>

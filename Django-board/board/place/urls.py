@@ -6,8 +6,8 @@ from .views import *
 app_name = 'location'
 
 urlpatterns = [
-    path('location/<int:pk>', PlaceListView.as_view(), name='index'),
+    path('<int:pk>', LocationDetailView.as_view(), name='index'),
     # path('', PlaceDetailView.as_view(), name='detail'),
-    path('location/', LocationListView.as_view(), name='idx')
+    path('', LocationListView.as_view(), name='idx')
 
 ]
