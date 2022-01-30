@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from bo.views import *
 from rest_framework import renderers
+from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, verify_jwt_token
 
 
 # board_list = BoardViewSet.as_view({
@@ -29,11 +30,10 @@ urlpatterns = [
     path('', BoardList.as_view(), name='index'),
     path('admin/', admin.site.urls),
     path('bo/', include('bo.urls')),
-    # path('common/', include('allauth.urls')),
     path('common/', include('common.urls')),
     path('place/', include('place.urls')),
 
+    path('rest-auth/', include('rest_auth.urls'))
 
-
-    path('api_auth/', include('rest_framework.urls')),
+    # path('api_auth/', include('rest_framework.urls')),
 ]

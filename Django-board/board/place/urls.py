@@ -20,7 +20,6 @@ location_detail = LocationListView.as_view({
 
 
 urlpatterns = format_suffix_patterns([
-    path('auth/', include('rest_framework.urls', namespace='rest_framework')),
     # path('location/<int:pk>', PlaceListView.as_view(), name='index'),
     # path('', PlaceDetailView.as_view(), name='detail'),
     path('locations/<int:pk>/', location_detail, name="location_detail"),

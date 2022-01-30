@@ -28,8 +28,7 @@ urlpatterns = [
     # path('<int:pk>/change-password/',
     #      views.UserPasswordChangeview.as_view(), name="change-password"),
     # path('rest-auth/login/', LoginView.as_view(), name="userlogin"),
+    path('login', Login.as_view()),
     path('signup/', UserCreate.as_view()),
-    path('users/', UserList.as_view(), name='userlist'),
-    path('users/<int:pk>', UserDetail.as_view(), name="userdetail")
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)

@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 
 
 class UserManager(BaseUserManager):
@@ -10,10 +10,13 @@ class UserManager(BaseUserManager):
 
         user = self.model(
             email=self.normalize_email(email),
+            # self.normalize_email? - >email을 정규화
+            # -> @ 뒤에 값을 대소문자 구분 x로 만듦으로서 다중 가입 방지
             name=name,
             gender=gender,
             date_of_birth=date_of_birth,
         )
+        # password hash 및 유저 save
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -28,12 +31,14 @@ class UserManager(BaseUserManager):
 
         )
         user.is_admin = True
+        user.is_staff = True
+        user.is_superuser = True
         user.save(using=self._db)
         return user
 # Create your models here.
 
 
-class User(AbstractBaseUser):
+class User(AbstractBaseUser, PermissionsMixin):
 
     email = models.EmailField(
         verbose_name='email',
@@ -49,6 +54,8 @@ class User(AbstractBaseUser):
     gender = models.CharField(max_length=20, choices=Gender_choices)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=True)
+    is_superuser = models.BooleanField(default=False)
 
     objects = UserManager()
 
@@ -63,7 +70,3 @@ class User(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return True
-
-    @property
-    def is_staff(self):
-        return self.is_admin
