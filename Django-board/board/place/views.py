@@ -25,8 +25,11 @@ class LocationDetailView(MultipleObjectMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         object_list = Place.objects.filter(location=self.kwargs['pk'])
+
         context = super(LocationDetailView, self).get_context_data(
             object_list=object_list, **kwargs)
+        context['name'] = Location.objects.filter(
+            id=self.kwargs['pk'])[0]
         return context
         # context = super(LocationDetailView, self).get_context_data(**kwargs)
         # context['list'] = Place.objects.filter(location=self.kwargs['pk'])

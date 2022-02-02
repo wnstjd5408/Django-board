@@ -10,9 +10,14 @@
     type="text/css"
     href="{% static 'bootstrap.min.css' %}"
     />
-    <title>가게리스트{{placelist}}</title>
+    <title>가게리스트</title>
 </head>
 <body>
+
+    <a href="{% url 'location:idx' %}" class=" col-auto text-center "><button class="btn btn-lg btn-outline-primary m-3">이전</button></a>
+    <h2 class='text-center'>{{name}}</h2>
+
+
     <div class ='container my-3'>
         <div class="row">
             {% if placelist %} 
