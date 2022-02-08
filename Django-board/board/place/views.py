@@ -18,7 +18,7 @@ class LocationDetailView(MultipleObjectMixin, DetailView):
     template_name = 'place/placelist.html'
     context_object_name = 'placelist'
     model = Place
-    paginate_by = 12  # 10개씩 리스트에 표시
+    paginate_by = 12  # 12개씩 리스트에 표시
 
     def get_queryset(self):
         return Place.objects.order_by('id')
