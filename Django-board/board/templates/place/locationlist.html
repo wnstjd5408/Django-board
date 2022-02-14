@@ -15,7 +15,7 @@
                 {% for location in locationlist %}
                 <tr>
                     <td>{{location.id}}</td>
-                    <td><a href="{% url 'location:index' location.id %}">{{location.location_name}}</a></td>
+                    <td><a href="{% url 'location:detail' location.id %}">{{location.location_name}}</a></td>
                     <td>{{location.count}}</td>
                 </tr>
                 {% endfor %}

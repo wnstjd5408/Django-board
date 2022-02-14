@@ -17,19 +17,17 @@ class LocationListView(ListView):
 class LocationDetailView(MultipleObjectMixin, DetailView):
     template_name = 'place/placelist.html'
     context_object_name = 'placelist'
-    model = Place
+
+    model = Location
     paginate_by = 12  # 12개씩 리스트에 표시
+    # def get_queryset(self):
+    #     return Location.objects.order_by('id')
 
-    def get_queryset(self):
-        return Place.objects.order_by('id')
+    def get_context_data(self, object_list=None, ** kwargs):
+        object_list = Place.objects.filter(location=self.get_object())
 
-    def get_context_data(self, **kwargs):
-        object_list = Place.objects.filter(location=self.kwargs['pk'])
-
-        context = super(LocationDetailView, self).get_context_data(
-            object_list=object_list, **kwargs)
-        context['name'] = Location.objects.filter(
-            id=self.kwargs['pk'])[0]
+        context = super().get_context_data(object_list=object_list, **kwargs)
+        context['name'] = Place.objects.filter(location=self.kwargs['pk'])
         return context
         # context = super(LocationDetailView, self).get_context_data(**kwargs)
         # context['list'] = Place.objects.filter(location=self.kwargs['pk'])
