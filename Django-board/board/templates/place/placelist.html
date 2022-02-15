@@ -15,7 +15,7 @@
 <body>
 
     <a href="{% url 'location:idx' %}" class=" col-auto text-center "><button class="btn btn-lg btn-outline-primary m-3">이전</button></a>
-    <h2 class='text-center'>{{placelist.0.location}}</h2>
+    <h2 class='text-center'>{{name}}</h2>
 
 
     <div class ='container my-3'>
@@ -23,7 +23,7 @@
             {% if placelist %} 
             {% for place in placelist %}
             <div class="col-4 col-md-4 text-center">
-                <a href="#"><img src='{{ place.place_imageurl }}' alt='a' width="220" height="210"></a>
+                <a href="{% url 'location:placedetail'  place.id %}"><img src='{{ place.place_imageurl }}' alt='a' width="220" height="210"></a>
                 <p>{{place.place_name}} </p>
             </div>
             {% endfor %}

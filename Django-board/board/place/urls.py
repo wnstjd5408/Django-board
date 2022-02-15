@@ -8,6 +8,6 @@ app_name = 'location'
 urlpatterns = [
     path('<int:pk>', LocationDetailView.as_view(), name='detail'),
     # path('', PlaceDetailView.as_view(), name='detail'),
-    path('', LocationListView.as_view(), name='idx')
-
+    path('', LocationListView.as_view(), name='idx'),
+    path('place/<int:pk>', PlaceDetailView.as_view(), name='placedetail')
 ]

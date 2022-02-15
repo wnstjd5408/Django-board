@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.urls import reverse
 # Create your models here.
 
 
@@ -9,7 +9,7 @@ class Location(models.Model):
     count = models.PositiveIntegerField(default=0, blank=True, null=True)
 
     def __str__(self) -> str:
-        return self.location_name
+        return str(self.id)
 
 
 class Place(models.Model):
@@ -31,3 +31,6 @@ class Place(models.Model):
 
     def __str__(self) -> str:
         return self.place_name
+
+    def get_absolute_url(self):
+        return reverse('location:detail', args=[self.location])

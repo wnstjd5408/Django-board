@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+    rel="stylesheet"
+    type="text/css"
+    href="{% static 'bootstrap.min.css' %}"
+    />
+    <title>Detail</title>
+</head>
+<body>
+    <a href="{{place.get_absolute_url }}" class=" col-auto text-center "><button class="btn btn-lg btn-outline-primary m-3">이전</button></a>
+
+    <div class="container my-3">
+        <div>
+            <h2>{{place.place_name}}</h2>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <p>정보 : {{place.place_info}}</p>
+            </div>
+            <div class="col-2">
+                <p>평점 : {{place.place_review_score}}</p>
+            </div>
+            <div class="col-2">
+                <p>방문자리뷰수 : {{place.place_review_visit}}</p>
+            </div>
+            <div class="col-2">
+                <p>블로그리뷰수 : {{place.place_review_blog}}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+                <p>위치 : {{place.place_location}}</p>
+            </div>
+            <div class="col-4">
+                <p>지하철 : {{place.place_subway}}</p>
+            </div>
+        </div>
+        <div>
+            {{place.place_time}}
+        </div>
+        <div>
+            <img src='{{ place.place_imageurl }}' alt='a' width="250" height="250">
+
+        </div>
+
+    </div>
+</body>
+</html>
