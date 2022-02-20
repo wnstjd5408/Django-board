@@ -24,4 +24,13 @@
             {% endif %}
         </tbody>
     </table>
+
+    <h2>추천가게</h2>
+    <div class="row">
+        {% if random %}
+        <a href="{% url 'location:placedetail'  random.id %}"><img src='{{random.place_imageurl }}' alt='a' width="220" height="210"></a>
+        <p>{{random.place_name}}</p>
+        {% endif %}
+    </div>
+
 {% endblock %}

@@ -14,10 +14,18 @@
 </head>
 <body>
 
-    <a href="{% url 'location:idx' %}" class=" col-auto text-center "><button class="btn btn-lg btn-outline-primary m-3">이전</button></a>
+    
+    <div class="row">
+        <a href="{% url 'location:idx' %}" class=" col-auto text-center "><button class="btn btn-lg btn-outline-primary m-3">이전</button></a>
+        {% if random %}
+        <div class="col-4 col-md-4 text-center">
+            <h4>추천식당</h4>
+            <a href="{% url 'location:placedetail'  random.id %}"><img src='{{ random.place_imageurl }}' alt='a' width="220" height="210"></a>
+            <p>{{random.place_name}}</p>
+        </div>
+        {% endif %}
+    </div>
     <h2 class='text-center'>{{location.0.location_name}}</h2>
-
-
     <div class ='container my-3'>
         <div class="row">
             {% if placelist %} 
