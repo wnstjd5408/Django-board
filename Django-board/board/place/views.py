@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import *
 from .models import Place, Location
-from django.db.models import Max
+from django.db.models import Max, Q
 # Create your views here.
 from django.views.generic.list import MultipleObjectMixin
 import random
@@ -57,7 +57,44 @@ class LocationDetailView(MultipleObjectMixin, DetailView):
         # return context
 
 
+# class PlaceSearchView(DetailView):
+#     template_name = 'place/placelist.html'
+#     context_object_name = 'placelist'
+
+#     model = Location
+#     paginate_by = 12
+
+#     def get_context_data(self,  ** kwargs):
+#         context = []
+#         val = self.request.GET.get("q")
+#         if val:
+#             object_list = Place.objects.filter(
+#                 Q(place_name__contains=val), location=self.get_object())
+#             context = super().get_context_data(object_list=object_list, **kwargs)
+#         else:
+#             object_list = Place.objects.none()
+#             context = super().get_context_data(object_list=object_list, **kwargs)
+#         return context
+
+
+class PlaceSearchList(ListView):
+    model = Place
+    template_name = 'place/placeSearchlist.html'
+    context_object_name = 'placelist'
+
+    def get_queryset(self):
+        val = self.request.GET.get("place_name")
+        location = self.request.GET.get("location")
+        if val:
+            queryset = Place.objects.filter(
+                Q(place_name__contains=val), location=location)
+        else:
+            queryset = Place.objects.all()
+        return queryset
+
+
 class PlaceDetailView(DetailView):
+
     model = Place
     template_name = 'place/placedetail.html'
     context_objcet_name = 'place'

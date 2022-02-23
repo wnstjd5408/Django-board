@@ -9,5 +9,6 @@ urlpatterns = [
     path('<int:pk>', LocationDetailView.as_view(), name='detail'),
     # path('', PlaceDetailView.as_view(), name='detail'),
     path('', LocationListView.as_view(), name='idx'),
-    path('place/<int:pk>', PlaceDetailView.as_view(), name='placedetail')
+    path('place/<int:pk>', PlaceDetailView.as_view(), name='placedetail'),
+    path('place/', PlaceSearchList.as_view(), name='placesearch')
 ]
