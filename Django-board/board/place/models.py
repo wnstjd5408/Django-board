@@ -24,6 +24,7 @@ class Place(models.Model):
     place_location = models.CharField(max_length=100, blank=True, null=True)
     place_subway = models.CharField(max_length=100, blank=True, null=True)
     place_time = models.CharField(max_length=1000, blank=True, null=True)
+    place_sns_site = models.URLField(max_length=500, blank=True, null=True)
     place_imageurl = models.URLField(max_length=500, blank=True, null=True)
     place_register = models.DateTimeField(null=True)
     location = models.ForeignKey(
