@@ -25,6 +25,7 @@ class LocationListView(ListView):
             if place:
                 context['random'] = place
                 break
+        print('context :', context)
         return context
 
 
@@ -34,8 +35,6 @@ class LocationDetailView(MultipleObjectMixin, DetailView):
 
     model = Location
     paginate_by = 12  # 12개씩 리스트에 표시
-    # def get_queryset(self):
-    #     return Location.objects.order_by('id')
 
     def get_context_data(self,  ** kwargs):
         object_list = Place.objects.filter(location=self.get_object())
@@ -52,9 +51,6 @@ class LocationDetailView(MultipleObjectMixin, DetailView):
         context['location'] = Location.objects.filter(
             id=self.kwargs['pk'])
         return context
-        # context = super(LocationDetailView, self).get_context_data(**kwargs)
-        # context['list'] = Place.objects.filter(location=self.kwargs['pk'])
-        # return context
 
 
 # class PlaceSearchView(DetailView):

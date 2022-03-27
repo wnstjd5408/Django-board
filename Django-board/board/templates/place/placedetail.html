@@ -42,9 +42,15 @@
             </div>
         </div>
         <div class="col-4">
+            {% if place_sns_site %}
             <p>
                 SNS 사이트 : <a href = "{{place.place_sns_site}}" role="button" class="col-auto text-center">SNS 사이트</a>
             </p>
+            {% else %}
+            <p>
+                SNS 사이트 : 사이트없음
+            </p>
+            {% endif %}
         </div>
         <div>
             
