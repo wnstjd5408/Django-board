@@ -5,6 +5,7 @@ from django.db.models import Max, Q
 # Create your views here.
 from django.views.generic.list import MultipleObjectMixin
 import random
+from django.contrib import messages
 
 
 class LocationListView(ListView):
@@ -82,10 +83,11 @@ class PlaceSearchList(ListView):
         val = self.request.GET.get("place_name")
         location = self.request.GET.get("location")
         if val:
-            queryset = Place.objects.filter(
-                Q(place_name__contains=val), location=location)
+            if len(val) > 1:
+                queryset = Place.objects.filter(
+                    Q(place_name__contains=val), location=location)
         else:
-            queryset = Place.objects.all()
+            messages.error(self.request, '검색어는 2글자 이상 입력해주세요')
         return queryset
 
 
